@@ -1,0 +1,13 @@
+caogao/
+ckpt/
+output/
+save/
+tmp/
+
+
+__pycache__
+*.pyc
+archive
+.idea
+.DS_Store
+
