@@ -2,14 +2,15 @@ from torch.utils.data import DataLoader
 import torch.optim as optim
 
 from model_tcc_triplet_v2_oral import Model
-from train_tcc import train
+from train_tcc_difLR import train
 #from train import train
 
-from dataset import Dataset
+from dataset_difLR import Dataset
 from test_10crop_tcc import test
 
 from logger import Logger
-import option
+# import option
+import option_difLR as option
 from tqdm import tqdm
 from utils import *
 from config import *
@@ -53,6 +54,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(Dataset(args, test_mode=True),
                              batch_size=1, shuffle=False,
                              num_workers=0, pin_memory=False, generator=torch.Generator(device='cuda'))
+
     print(test_loader)
     model = Model(args)
     if args.pretrained_model is not None:
@@ -128,7 +130,6 @@ if __name__ == '__main__':
                                                                                    text_opt, args.fusion, args.alpha,
                                                                                    extra_loss_opt, step, args.seed,
                                                                                    sb_pt_name))
-
                 AUCs = test_info["test_AUC"]
                 AUCs_mean, AUCs_median, AUCs_std, AUCs_max, AUCs_min = np.mean(AUCs), np.median(AUCs), np.std(
                     AUCs), np.max(AUCs), np.min(AUCs)
