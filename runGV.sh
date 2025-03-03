@@ -2,6 +2,12 @@ echo start process!
 set -x # -e stop when any code raise error; -x print command
 start_time=$(date +%s)
 
+# 3.3
+python main_difLR.py --seed 0 --feat_extractor clip --dataset ucfg2 --feature-size 512 --batch-size 32 --rgb_list list/GV/ucfg2-clip.list --test_rgb_list list/GV/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucfg2-CLIP_B-VLR0.1-seed0
+python main_difLR.py --seed 228 --feat_extractor clip --dataset ucfg2 --feature-size 512 --batch-size 32 --rgb_list list/GV/ucfg2-clip.list --test_rgb_list list/GV/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucfg2-CLIP_B-VLR0.1-seed228
+python main_difLR.py --seed 3407 --feat_extractor clip --dataset ucfg2 --feature-size 512 --batch-size 32 --rgb_list list/GV/ucfg2-clip.list --test_rgb_list list/GV/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucfg2-CLIP_B-VLR0.1-seed3407
+echo "3.3 ucfg2-CLIP_B-VLR0.1 Run finish!"
+
 #python main.py --seed 0 --feat_extractor clip --dataset ucfg2 --feature-size 512 --batch-size 32 --rgb_list list/GV/ucfg2-clip-no-abn.list --test_rgb_list list/GV/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucfg2-CLIP_B-no_abn-seed0
 #python main.py --seed 228 --feat_extractor clip --dataset ucfg2 --feature-size 512 --batch-size 32 --rgb_list list/GV/ucfg2-clip-no-abn.list --test_rgb_list list/GV/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucfg2-CLIP_B-no_abn-seed228
 #python main.py --seed 3407 --feat_extractor clip --dataset ucfg2 --feature-size 512 --batch-size 32 --rgb_list list/GV/ucfg2-clip-no-abn.list --test_rgb_list list/GV/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucfg2-CLIP_B-no_abn-seed3407
@@ -43,8 +49,7 @@ start_time=$(date +%s)
 #python main.py --seed 228 --feat_extractor clip --dataset ucfcrime --feature-size 512 --batch-size 32 --rgb_list list/ucf-clip-train.list --test_rgb_list list/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucf-CLIP_B-seed228
 #python main.py --seed 3407 --feat_extractor clip --dataset ucfcrime --feature-size 512 --batch-size 32 --rgb_list list/ucf-clip-train.list --test_rgb_list list/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt --beta 0.001 --gama 0.1 --exp-name ucf-CLIP_B-seed3407
 
-python ./tools/quick_get_best_AP.py
-python ./tools/quick_get_best_AUC.py
+python ./tools/get_best_ap_auc.py > /dev/null 2>&1
 
 end_time=$(date +%s)
 runtime_hours=$(((end_time - start_time)/3600))
