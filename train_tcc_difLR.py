@@ -138,7 +138,8 @@ def train(nloader, aloader, model, args, optimizer, viz, device,percent,logger=N
         total_loss = loss_a + loss_b + args.beta * LAT_loss + triplet_loss
 
         optimizer.zero_grad()  # 将模型的参数梯度初始化为0
-        cost.backward()  # 反向传播计算梯度
+        # cost.backward()  # 反向传播计算梯度
+        total_loss.backward()
         optimizer.step()  # 更新所有参数
 
         if logger:
