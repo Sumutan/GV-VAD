@@ -108,7 +108,7 @@ if __name__ == '__main__':
                     best_ap = test_info["test_AP"][-1]
                     best_epoch = step
                     torch.save(model.state_dict(),
-                               './ckpt/' + '{}-{}-{}-{}-{}-{}-{}-{}-{}.pkl'.format(args.dataset, args.feature_group,
+                               './ckpt/' + viz_name + '{}-{}-{}-{}-{}-{}-{}-{}-{}.pkl'.format(args.dataset, args.feature_group,
                                                                                    text_opt, args.fusion, args.alpha,
                                                                                    extra_loss_opt, step, args.seed,
                                                                                    sb_pt_name))
@@ -124,7 +124,7 @@ if __name__ == '__main__':
                     best_AUC = test_info["test_AUC"][-1]
                     best_epoch = step
                     torch.save(model.state_dict(),
-                               './ckpt/' + '{}-{}-{}-{}-{}-{}-{}-{}-{}.pkl'.format(args.dataset, args.feature_group,
+                               './ckpt/' + viz_name + '{}-{}-{}-{}-{}-{}-{}-{}-{}.pkl'.format(args.dataset, args.feature_group,
                                                                                    text_opt, args.fusion, args.alpha,
                                                                                    extra_loss_opt, step, args.seed,
                                                                                    sb_pt_name))
