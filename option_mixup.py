@@ -3,6 +3,7 @@ import argparse
 parser = argparse.ArgumentParser(description='RTFM')
 # option for difLR
 parser.add_argument('--mixup_alpha', type=float, default=1.0, help='控制mixup的Beta分布参数')
+parser.add_argument('--mixup_version', type=str, default='v1', help='控制mixup的Beta分布参数')
 # option
 parser.add_argument('--exp-name', type=str, default='test', help='exp-name，also viz_name')
 parser.add_argument('--feat_extractor', default='clip', choices=['i3d', 'c3d','videoMAE','clip'])

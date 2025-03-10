@@ -162,12 +162,18 @@ def train(nloader, aloader, model, args, optimizer, viz, device, percent, logger
         sources = torch.cat((sources_n, sources_a), 0).to(device)
 
         # 应用Mixup
-        if args.mixup_alpha > 0:
+        if args.mixup_alpha > 0 and args.mixup_version=='v1' :
             lam = np.random.beta(args.mixup_alpha, args.mixup_alpha)
             index = torch.randperm(input.size(0))
             mixed_input = lam * input + (1 - lam) * input[index]
             mixed_text = lam * text + (1 - lam) * text[index]
             mixed_labels = lam * labels + (1 - lam) * labels[index]
+        elif args.mixup_alpha > 0 and args.mixup_version == 'v2':
+            lam = np.random.beta(args.mixup_alpha, args.mixup_alpha)
+            index = torch.randperm(input.size(0))
+            mixed_input = lam * input + (1 - lam) * input[index]
+            mixed_text = lam * text + (1 - lam) * text[index]
+            mixed_labels = torch.maximum(lam * labels, labels[index])
         else:
             mixed_input, mixed_text, mixed_labels = input, text, labels
 
