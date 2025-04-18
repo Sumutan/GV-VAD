@@ -36,3 +36,6 @@ parser.add_argument('--emb_dim', type=int, default=768, help='dimension of text 
 parser.add_argument('--abn_curve_save_root', type=str, default='./figures', help='folder for abn_curve_savepath')
 parser.add_argument('--beta', type=float, default=0.001, help='weight for PAL loss')
 parser.add_argument('--gama', type=float, default=0.1, help='weight for MPL loss')
+
+parser.add_argument('--DSR', type=float, default=1, help='sampling rate of training data')
+

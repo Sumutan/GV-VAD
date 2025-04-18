@@ -4,6 +4,7 @@ from utils import process_feat, get_rgb_list_file
 import torch
 from torch.utils.data import DataLoader
 import re
+import random
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
@@ -28,17 +29,12 @@ class Dataset(data.Dataset):
             else:
                 self.rgb_list_file = args.test_rgb_list
 
-        # # deal with different I3D feature version
-        if 'v2' in self.dataset:
-            self.feat_ver = 'v2'
-        elif 'v3' in self.dataset:
-            self.feat_ver = 'v3'
-        else:
-            self.feat_ver = 'v1'
-
         self.tranform = transform
         self.test_mode = test_mode
         self._parse_list()
+        if args.DSR < 1 and not self.is_test: # DSR v1
+            sample_size = int(len(self.list) * args.DSR)
+            self.list=random.sample(self.list, sample_size)
         self.num_frame = 0
         self.labels = None
         self.feat_extractor = args.feat_extractor
@@ -108,13 +104,6 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
         label = self.get_label()  # get video level label 0/1
         vis_feature_path = self.list[index].strip('\n')
-
-        # 作者关于数据集版本的一些路径处理
-        if self.feat_ver in ['v2', 'v3']:
-            if self.feat_ver == 'v2':
-                vis_feature_path = vis_feature_path.replace('i3d_v1', 'i3d_v2')
-            elif self.feat_ver == 'v3':
-                vis_feature_path = vis_feature_path.replace('i3d_v1', 'i3d_v3')
 
         features = np.load(vis_feature_path, allow_pickle=True)  # allow_pickle允许读取其中的python对象
         features = np.array(features, dtype=np.float32)

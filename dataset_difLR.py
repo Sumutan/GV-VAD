@@ -5,6 +5,7 @@ from utils import process_feat, get_rgb_list_file
 import torch
 from torch.utils.data import DataLoader
 import re
+import random
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
@@ -47,22 +48,17 @@ class Dataset(data.Dataset):
             else:
                 self.rgb_list_file = args.test_rgb_list
 
-        # # deal with different I3D feature version
-        if 'v2' in self.dataset:
-            self.feat_ver = 'v2'
-        elif 'v3' in self.dataset:
-            self.feat_ver = 'v3'
-        else:
-            self.feat_ver = 'v1'
-
         self.tranform = transform
         self.test_mode = test_mode
-        self._parse_list()
+        self._parse_list(args.DSR)
+        # if args.DSR < 1 and not self.is_test:  # DSR v1
+        #     sample_size = int(len(self.list) * args.DSR)
+        #     self.list=random.sample(self.list, sample_size)
         self.num_frame = 0
         self.labels = None
         self.feat_extractor = args.feat_extractor
 
-    def _parse_list(self):
+    def _parse_list(self,DSR=1.0):
         self.list = list(open(self.rgb_list_file))
         if self.test_mode is False:  # list for training would need to be ordered from normal to abnormal
             if 'shanghai' in self.dataset:
@@ -73,19 +69,40 @@ class Dataset(data.Dataset):
                     self.list = self.list[:63]
                     print('abnormal list for shanghai tech')
             elif 'ucfg1' in self.dataset:
-                if self.is_normal:
-                    self.list = self.list[1107:]
-                    print('normal list for ucf')
+                if DSR==1.0:
+                    if self.is_normal:
+                        self.list = self.list[1107:]
+                        print('normal list for ucf')
+                    else:
+                        self.list = self.list[:1107]
+                        print('abnormal list for ucf')
                 else:
-                    self.list = self.list[:1107]
-                    print('abnormal list for ucf')
+                    if self.is_normal:
+                        sample_size = int(len(self.list[1107:1907]) * DSR)
+                        self.list = random.sample(self.list[1107:1907], sample_size)+self.list[1907:]
+                        print('normal list for ucf')
+                    else:
+                        sample_size = int(len(self.list[:810]) * DSR)
+                        self.list = random.sample(self.list[:810], sample_size) + self.list[810:1107]
+                        print('abnormal list for ucf')
+
             elif 'ucfg2' in self.dataset:
-                if self.is_normal:
-                    self.list = self.list[926:]
-                    print('normal list for ucf')
+                if DSR == 1.0:
+                    if self.is_normal:
+                        self.list = self.list[926:]
+                        print('normal list for ucf')
+                    else:
+                        self.list = self.list[:926]
+                        print('abnormal list for ucf')
                 else:
-                    self.list = self.list[:926]
-                    print('abnormal list for ucf')
+                    if self.is_normal:
+                        sample_size = int(len(self.list[926:1726]) * DSR)
+                        self.list = random.sample(self.list[926:1726], sample_size)+self.list[1726:]
+                        print('normal list for ucf')
+                    else:
+                        sample_size = int(len(self.list[:810]) * DSR)
+                        self.list = random.sample(self.list[:810], sample_size) + self.list[810:926]
+                        print('abnormal list for ucf')
             elif 'ucf' in self.dataset:
                 if self.is_normal:
                     self.list = self.list[810:]
@@ -127,13 +144,6 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
         label = self.get_label()  # get video level label 0/1
         vis_feature_path = self.list[index].strip('\n')
-
-        # 作者关于数据集版本的一些路径处理
-        if self.feat_ver in ['v2', 'v3']:
-            if self.feat_ver == 'v2':
-                vis_feature_path = vis_feature_path.replace('i3d_v1', 'i3d_v2')
-            elif self.feat_ver == 'v3':
-                vis_feature_path = vis_feature_path.replace('i3d_v1', 'i3d_v3')
 
         features = np.load(vis_feature_path, allow_pickle=True)  # allow_pickle允许读取其中的python对象
         features = np.array(features, dtype=np.float32)
@@ -201,7 +211,7 @@ class Dataset(data.Dataset):
             return features, text_features, lableFileName
 
         # 添加数据来源判断
-        is_gen_data = 'descriptions_1_Features' in vis_feature_path
+        is_gen_data = 'description' in vis_feature_path or 'GeneratedVideos' in vis_feature_path
         source_flag = 1 if is_gen_data else 0
         if source_flag==1:
             pass
