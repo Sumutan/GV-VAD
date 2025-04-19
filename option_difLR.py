@@ -4,6 +4,7 @@ parser = argparse.ArgumentParser(description='RTFM')
 # option for difLR
 parser.add_argument('--VLR', type=float, default=1.0, help='Virtual dataset learning rate scaling factor')
 parser.add_argument('--DSR', type=float, default=1, help='sampling rate of training data')
+parser.add_argument('--VLR_Strategy', type=str, default='None', help='Virtual dataset learning rate strategy')
 # option
 parser.add_argument('--exp-name', type=str, default='test', help='exp-name，also viz_name')
 parser.add_argument('--feat_extractor', default='clip', choices=['i3d', 'c3d','videoMAE','clip'])

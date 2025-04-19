@@ -76,7 +76,7 @@ if __name__ == '__main__':
     best_AUC, best_ap = -1, -1
     best_epoch = -1
     output_path = 'output'  # put your own path here
-    auc = test(test_loader, model, args, viz, viz_name,device)
+    # auc = test(test_loader, model, args, viz, viz_name,device)
     # training
     for step in tqdm(
             range(1, args.max_epoch + 1),

@@ -3,7 +3,23 @@ set -x # -e stop when any code raise error; -x print command
 start_time=$(date +%s)
 
 #4.18
+CUDA_VISIBLE_DEVICES=0 python main_difLR.py --seed 3407 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy linear_cosine --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_lin_cos-seed3407 &
+CUDA_VISIBLE_DEVICES=1 python main_difLR.py --seed 3407 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy exponential_step --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_exp_stp-seed3407 &
+CUDA_VISIBLE_DEVICES=2 python main_difLR.py --seed 3407 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy cosine_none --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_cos_non-seed3407
+wait
+echo "4.18 ucfg2-CLIP_L-VLR0.5-VLR_S_lin-seed3407 Run finish!"
 
+CUDA_VISIBLE_DEVICES=0 python main_difLR.py --seed 0 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy linear_cosine --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_lin_cos-seed0 &
+CUDA_VISIBLE_DEVICES=1 python main_difLR.py --seed 0 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy exponential_step --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_exp_stp-seed0 &
+CUDA_VISIBLE_DEVICES=2 python main_difLR.py --seed 0 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy cosine_none --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_cos_non-seed0
+wait
+echo "4.18 ucfg2-CLIP_L-VLR0.5-VLR_S_lin-seed0 Run finish!"
+
+CUDA_VISIBLE_DEVICES=0 python main_difLR.py --seed 228 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy linear_cosine --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_lin_cos-seed228 &
+CUDA_VISIBLE_DEVICES=1 python main_difLR.py --seed 228 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy exponential_step --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_exp_stp-seed228 &
+CUDA_VISIBLE_DEVICES=2 python main_difLR.py --seed 228 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --VLR_Strategy cosine_none --exp-name ucfg2-CLIP_L-VLR0.5-VLR_S_cos_non-seed228
+wait
+echo "4.18 ucfg2-CLIP_L-VLR0.5-VLR_S_lin-seed228 Run finish!"
 
 ##4.4
 #CUDA_VISIBLE_DEVICES=0 python main_difLR.py --seed 0 --DSR 0.25 --feat_extractor clip --dataset ucfg2 --feature-size 768 --batch-size 32  --rgb_list list/GV-CLIP-L/ucfg2-clip.list --test_rgb_list list/GV-CLIP-L/ucf-clip-test.list --feature-group both --fusion concat --emb_folder sent_emb_n --emb_dim 768 --aggregate_text --extra_loss --use_dic_gt  --VLR 0.5 --exp-name ucfg2-CLIP_L-VLR0.5-DSRv2_0.25-seed0 &

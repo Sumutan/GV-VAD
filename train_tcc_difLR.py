@@ -5,7 +5,29 @@ torch.set_default_tensor_type('torch.cuda.FloatTensor')
 from torch.nn import L1Loss
 from torch.nn import MSELoss
 
+def get_warmup_lr(epoch, max_epochs=1000, warmup_ratio=0.1, strategy="linear_cosine"):
+    warmup_epochs = int(max_epochs * warmup_ratio)
+    initial_lr = 0.001
+    target_lr = 1.0
 
+    # Warm-up 阶段
+    if epoch < warmup_epochs:
+        if strategy.startswith("linear"):
+            return initial_lr + (target_lr - initial_lr) * (epoch / warmup_epochs)  # 线性增长[1,2](@ref)
+        elif strategy.startswith("exponential"):
+            return initial_lr * (target_lr / initial_lr) ** (epoch / warmup_epochs)  # 指数增长[2](@ref)
+        elif strategy.startswith("cosine"):
+            return initial_lr + 0.5 * (target_lr - initial_lr) * (
+                        1 - np.cos(np.pi * epoch / warmup_epochs))  # 余弦增长[3](@ref)
+
+    # 衰减阶段
+    decay_epochs = max_epochs - warmup_epochs
+    if strategy.endswith("cosine"):
+        return target_lr * 0.5 * (1 + np.cos(np.pi * (epoch - warmup_epochs) / decay_epochs))  # 余弦衰减[3](@ref)
+    elif strategy.endswith("step"):
+        return target_lr * (0.1 ** ((epoch - warmup_epochs) // 200))  # 每200epoch衰减0.1倍[6](@ref)
+    elif strategy.endswith("none"):
+        return target_lr  # 无衰减
 
 def sparsity(arr, batch_size, lamda2):  # arr1.shape=[1024, ], abn_scores
     loss = torch.mean(torch.norm(arr, dim=0))
@@ -131,8 +153,12 @@ def train(nloader, aloader, model, args, optimizer, viz, device,percent,logger=N
         viz.plot_lines('triplet loss', triplet_loss.item())
 
         # 应用不同权重
+        VLR_Warmup_lrRate=1.0
+        if args.VLR_Strategy != 'None':
+            VLR_Warmup_lrRate = get_warmup_lr(step+100, max_epochs=args.max_epoch, warmup_ratio=0.1,
+                                              strategy=args.VLR_Strategy)
         loss_a = cost * a_mask.float().mean()
-        loss_b = cost * b_mask.float().mean() * args.VLR  # args.VLR: 虚拟数据集学习率倍率
+        loss_b = cost * b_mask.float().mean() * args.VLR * VLR_Warmup_lrRate  # args.VLR: 虚拟数据集学习率倍率
 
         # 组合总损失
         total_loss = loss_a + loss_b + args.beta * LAT_loss + triplet_loss
