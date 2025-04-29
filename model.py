@@ -248,6 +248,10 @@ class Model(nn.Module):
                 out = torch.cat([out, out2], dim=2)  # train: out.shape=[64, 10, 32, 2048+args.emb_dim]
             elif self.feature_group == 'text':
                 out, ncrops, f = out2, ncrops2, f2
+            elif self.feature_group == 'vis':
+                pass  # nothing should to do.
+            else:
+                raise ValueError(f"invalid feature_group{self.feature_group}")
         elif self.fusion == 'product':
             out = self.relu(self.fc0(out))  # vis feature reduces to dim=args.emb_dim
             out = self.drop_out(out)

@@ -142,7 +142,7 @@ def train(nloader, aloader, model, args, optimizer, viz, device,percent,logger=N
         loss_smooth = smooth(abn_scores, 8e-4)  # Section 3.4, temporal smoothness
         if args.extra_loss:
             cost = loss_criterion(score_normal, score_abnormal, nlabel, alabel, feat_select_normal,
-                                  feat_select_abn) + loss_smooth + 1*loss_sparse + args.beta*LAT_loss + triplet_loss
+                                  feat_select_abn) + loss_smooth + 1*loss_sparse + args.beta*LAT_loss + args.gama * triplet_loss
         else:
             cost = loss_criterion(score_normal, score_abnormal, nlabel, alabel, feat_select_normal, feat_select_abn)
 
@@ -161,7 +161,7 @@ def train(nloader, aloader, model, args, optimizer, viz, device,percent,logger=N
         loss_b = cost * b_mask.float().mean() * args.VLR * VLR_Warmup_lrRate  # args.VLR: 虚拟数据集学习率倍率
 
         # 组合总损失
-        total_loss = loss_a + loss_b + args.beta * LAT_loss + triplet_loss
+        total_loss = loss_a + loss_b # + args.beta * LAT_loss + triplet_loss
 
         optimizer.zero_grad()  # 将模型的参数梯度初始化为0
         # cost.backward()  # 反向传播计算梯度
