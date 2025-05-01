@@ -334,6 +334,10 @@ class Model(nn.Module):
         self.gama = args.gama
         self.apply(weight_init)
 
+        # 添加可学习的VLR参数，初始值为args.VLR
+        if hasattr(args, "Learnable_VLR") and args.Learnable_VLR:
+            self.VLR = nn.Parameter(torch.tensor(args.VLR), requires_grad=True)
+
     def forward(self, inputs, text,videoname, is_training=False):
         #percent is a dynamic threshold to select abnormal features,accroding to iteration
         if is_training:

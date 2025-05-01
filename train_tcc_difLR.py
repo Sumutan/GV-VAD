@@ -151,14 +151,20 @@ def train(nloader, aloader, model, args, optimizer, viz, device,percent,logger=N
         viz.plot_lines('sparsity loss', loss_sparse.item())
         viz.plot_lines('LAT loss', LAT_loss.item())
         viz.plot_lines('triplet loss', triplet_loss.item())
+        viz.plot_lines('VLR value', model.VLR.item())
+        # viz.plot_lines('VLR Grad', model.VLR.grad)
 
-        # 应用不同权重
-        VLR_Warmup_lrRate=1.0
-        if args.VLR_Strategy != 'None':
+        # VLR_Warmup
+        if args.VLR_Strategy== 'None':
+            VLR_Warmup_lrRate=1.0
+        else:
             VLR_Warmup_lrRate = get_warmup_lr(step+100, max_epochs=args.max_epoch, warmup_ratio=0.1,
-                                              strategy=args.VLR_Strategy)
+                                                  strategy=args.VLR_Strategy)
+        # Learnable_VLR
+        VLR = model.VLR if args.Learnable_VLR else args.VLR  # args.VLR: 虚拟数据集学习率倍率
+
         loss_a = cost * a_mask.float().mean()
-        loss_b = cost * b_mask.float().mean() * args.VLR * VLR_Warmup_lrRate  # args.VLR: 虚拟数据集学习率倍率
+        loss_b = cost * b_mask.float().mean() * VLR * VLR_Warmup_lrRate
 
         # 组合总损失
         total_loss = loss_a + loss_b # + args.beta * LAT_loss + triplet_loss
@@ -171,4 +177,5 @@ def train(nloader, aloader, model, args, optimizer, viz, device,percent,logger=N
         if logger:
             logger.log(f"Epoch {step}  loss: {cost.item():.4f}  smooth loss: {loss_smooth.item():.4f}  sparsity loss: {loss_sparse.item():.4f}")
 
+        print(f"VLR value: {model.VLR.item()}, Grad: {model.VLR.grad}")
 

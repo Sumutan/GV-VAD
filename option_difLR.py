@@ -3,13 +3,14 @@ import argparse
 parser = argparse.ArgumentParser(description='RTFM')
 # option for difLR
 parser.add_argument('--VLR', type=float, default=1.0, help='Virtual dataset learning rate scaling factor')
+parser.add_argument('--Learnable_VLR', action='store_true',default=False, help='Learnable VLR, VLR_Strategy is disabled when Learnable_VLR is opening')
 parser.add_argument('--DSR', type=float, default=1, help='sampling rate of training data')
 parser.add_argument('--VLR_Strategy', type=str, default='None', help='Virtual dataset learning rate strategy')
 # option
 parser.add_argument('--exp-name', type=str, default='test', help='exp-name，also viz_name')
 parser.add_argument('--feat_extractor', default='clip', choices=['i3d', 'c3d','videoMAE','clip'])
 parser.add_argument('--feature-size', type=int, default=512, help='size of vis feature (default: 2048)')
-parser.add_argument('--use_dic_gt', action='store_true', default=True,  help='get GrandTruth from a pickle file')
+parser.add_argument('--use_dic_gt', action='store_true', default=False, help='get GrandTruth from a pickle file')
 parser.add_argument('--alignment_method',type=str, default='add',choices=['add','cut'],  help='the alignment method to dealwith superfluous frames')
 parser.add_argument('--modality', default='RGB', help='the type of the input, RGB,AUDIO, or MIX')
 parser.add_argument('--rgb_list', default='list/ucf-clip-train.list', help='list of rgb features ')
